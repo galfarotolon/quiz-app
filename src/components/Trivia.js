@@ -3,17 +3,19 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 //components
-import Button from './Button'
+
 
 const Trivia = () => {
 
 
 
-    const apiUrl = 'https://opentdb.com/api.php?amount=50'
+    const apiUrl = 'https://opentdb.com/api.php?amount=10'
 
 
     const [questions, setQuestions] = useState([])
     const [counter, setCounter] = useState(0)
+    const [score, setScore] = useState(0)
+    const [gameEnded, setGameEnded] = useState(false)
 
   
 
@@ -24,8 +26,6 @@ const Trivia = () => {
             .then(res => {
                 console.log(res.data.results);
                 setQuestions(res.data.results)
-              
-        
             })
             .catch(err => {
                 console.log(err);
@@ -34,23 +34,43 @@ const Trivia = () => {
     }, [])
 
 
-const shuffledAnswers = []
+let shuffledAnswers = []
 
-if(questions.length){
+if(questions.length && counter + 1 <= questions.length){
 
-    
-  shuffledAnswers.push(questions[0].correct_answer, ...questions[0].incorrect_answers)
+  // get all answers in the same array
 
-  console.log(shuffledAnswers);
+    shuffledAnswers.push(questions[counter].correct_answer, ...questions[counter].incorrect_answers)
+
+    //shuffle them to move the answer from always being the first choice
+    shuffledAnswers = shuffledAnswers.sort(() => Math.random() - 0.5)
+  
+    console.log(shuffledAnswers);
+
+  
+
 
 }
 
 
 function handleAnswer(answer){
+
         
     setCounter(counter + 1)
-    console.log(counter);
+    console.log(counter + 1);
+    console.log('clicked');
+    console.log(questions.length, 'qs length');
+
+    //increase score if answer matches correct answer
+    
+    if(answer === questions[counter].correct_answer){
+        setScore(score + 1)
+    }
        
+    if(counter + 1 === questions.length  ){
+        setGameEnded(true)
+    }
+
     }
   
 
@@ -59,7 +79,14 @@ function handleAnswer(answer){
 
 
 
-    return questions.length > 0 ? (
+    return gameEnded ? (
+        <div>
+
+            <p>Your Score was {score}</p>
+        </div>
+    ) : (
+    
+    questions.length > 0 ? (
 
             <div className='flex justify-center items-center h-screen flex-col'>
                 Welcome to the Trivia Section!
@@ -71,25 +98,33 @@ function handleAnswer(answer){
 
                 
     
-                    <h2 dangerouslySetInnerHTML={{__html:questions[0].question }} />
-    
+                    <h2 dangerouslySetInnerHTML={{__html:questions[counter].question }} />
+                    <p>Question {counter + 1} out of {questions.length}</p>
+                    <p>Score: {score}/{questions.length}</p>
  
          
     
-                    <div className='answers grid sm:grid-cols-2 gap-4 border-solid border-4 border-red-500 p-10 grid-cols-1'>
+                    <div className='answers grid sm:grid-cols-2 gap-4 border-solid border-4 border-red-500 p-10 grid-cols-1 '>
+
+                        {shuffledAnswers.map((answer, idx) =>{
+                            return <button 
+                            className='bg-red-500 text-white p-5 m-5 font-semibold rounded-md focus:outline-none hover:bg-red-400' 
+                            onClick={()=>handleAnswer(answer)} 
+                            key={idx} 
+                            dangerouslySetInnerHTML={{__html: answer}} />
+                            })}
                       
-                        <Button answer={shuffledAnswers[0]}/>
-                        <Button answer={shuffledAnswers[1]} />
-                        <Button answer={shuffledAnswers[2]} />
-                        <Button answer={shuffledAnswers[3]}/>
                     </div>
     
     
-    
                 </div>
+
+             
             </div>
+
+            
         ) : <h2 className='text-2xl text-black font-bold'>loading...</h2>
     
-}
+    )}
 
 export default Trivia
