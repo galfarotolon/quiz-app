@@ -40,7 +40,11 @@ function handleAnswer(answer){
     }, [])
 
 
- const shuffledAnswers = [questions[0].correct_answer, ...questions[0].incorrect_answers]
+// const shuffledAnswers = []
+
+//   shuffledAnswers.push(questions.correct_answer, ...questions.incorrect_answers)
+
+
 
 
 
@@ -65,10 +69,10 @@ function handleAnswer(answer){
     
                     <div className='answers grid sm:grid-cols-2 gap-4 border-solid border-4 border-red-500 p-10 grid-cols-1'>
                       
-                        <Button answer={shuffledAnswers[0]} />
-                        <Button answer={shuffledAnswers[1]} />
-                        <Button answer={shuffledAnswers[2]} />
-                        <Button answer={shuffledAnswers[3]} />
+                        <Button answer={questions[0].correct_answer}/>
+                        <Button answer={questions[0].incorrect_answers[0]} />
+                        <Button answer={questions[0].incorrect_answers[1]} />
+                        <Button answer={questions[0].incorrect_answers[2]}/>
                     </div>
     
     
