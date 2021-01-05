@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { Route, Switch } from 'react-router-dom';
 
@@ -9,11 +9,6 @@ import Trivia from './components/Trivia'
 import Countries from './components/Countries'
 
 function App() {
-
-  const apiUrl = 'https://opentdb.com/api.php?amount=50'
-
-
-
 
 
   return (
