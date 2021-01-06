@@ -16,63 +16,86 @@ const Trivia = () => {
     const [counter, setCounter] = useState(0)
     const [score, setScore] = useState(0)
     const [gameEnded, setGameEnded] = useState(false)
+    const [correctAnswer, setCorrectAnswer] = useState(false)
 
   
-
-
 
     useEffect(() => {
         axios.get(apiUrl)
             .then(res => {
                 console.log(res.data.results);
-                setQuestions(res.data.results)
-            })
+
+                const questions = res.data.results.map(question => ({
+                    ...question, 
+                    answers: [
+                        question.correct_answer,
+                        ...question.incorrect_answers,
+                    ].sort(()=>Math.random() - 0.5),
+            }))
+
+                setQuestions(questions)
+                console.log(questions, 'qssss');
+         
+        })
+            
             .catch(err => {
                 console.log(err);
             })
 
+
+
     }, [])
 
 
-let shuffledAnswers = []
 
-if(questions.length && counter + 1 <= questions.length){
+    const shuffledAnswers = []
 
-  // get all answers in the same array
+    // const newArr = []
+    
+   if(questions.length && counter + 1 <= questions.length){
 
-    shuffledAnswers.push(questions[counter].correct_answer, ...questions[counter].incorrect_answers)
-
-    //shuffle them to move the answer from always being the first choice
-    shuffledAnswers = shuffledAnswers.sort(() => Math.random() - 0.5)
-  
-    console.log(shuffledAnswers);
-
-  
-
-
-}
+    //     // get all answers in the same array
+    shuffledAnswers.push(...questions[counter].answers)
+      
+      
+  }
 
 
 function handleAnswer(answer){
 
-        
-    setCounter(counter + 1)
-    console.log(counter + 1);
-    console.log('clicked');
-    console.log(questions.length, 'qs length');
+    console.log('rerender')
 
-    //increase score if answer matches correct answer
-    
-    if(answer === questions[counter].correct_answer){
-        setScore(score + 1)
+    if(!correctAnswer){
+        if(answer === questions[counter].correct_answer){
+            setCorrectAnswer(true)
+            setScore(score + 1)
+           
+        } else{
+           
+            //make something happen when a wrong answer is clicked
+            
+        }
+
     }
+    
+
        
     if(counter + 1 === questions.length  ){
         setGameEnded(true)
     }
 
+    // setCorrectAnswer(true)
+
     }
   
+    //if the answer clicked is the correct answer, highlight it as green 
+    //if its not, highlight the correct one as green
+
+    const handleNext = () => {
+        setCorrectAnswer(false);
+
+        setCounter(counter + 1)
+    }
 
 
 
@@ -86,7 +109,7 @@ function handleAnswer(answer){
         </div>
     ) : (
     
-    questions.length > 0 ? (
+        questions.length > 0 ? (
 
             <div className='flex justify-center items-center h-screen flex-col'>
                 Welcome to the Trivia Section!
@@ -94,7 +117,7 @@ function handleAnswer(answer){
                 <Link to='/'>Home</Link>
     
     
-                <div className='text-purple-800 p-4'>
+                <div className='text-purple-900 p-4'>
 
                 
     
@@ -107,23 +130,41 @@ function handleAnswer(answer){
                     <div className='answers grid sm:grid-cols-2 gap-4 border-solid border-4 border-red-500 p-10 grid-cols-1 '>
 
                         {shuffledAnswers.map((answer, idx) =>{
-                            return <button 
-                            className='bg-red-500 text-white p-5 m-5 font-semibold rounded-md focus:outline-none hover:bg-red-400' 
+
+                            // console.log(obj, 'obj ans');
+
+
+                                const correct = correctAnswer ? 
+                                answer === questions[counter].correct_answer ? 
+                                `bg-green-500` : 'bg-red-500' : 'bg-blue-500'
+    
+                                const textColor = correctAnswer ?
+                                'text-purple-800' : 'text-white' 
+
+                                       return <button 
+                            className= {`${correct} ${textColor} p-5 m-5 font-semibold rounded-md focus:outline-none hover:bg-blue-400`}
                             onClick={()=>handleAnswer(answer)} 
                             key={idx} 
                             dangerouslySetInnerHTML={{__html: answer}} />
-                            })}
-                      
-                    </div>
-    
-    
-                </div>
 
+                            })
+   
+                        }  
+                        
+                    </div>
+                </div>
+                
+                {
+                    correctAnswer && (
+                        <button onClick={handleNext}>Next</button>
+                    )
+                }
+               
              
             </div>
 
             
-        ) : <h2 className='text-2xl text-black font-bold'>loading...</h2>
+            ) : <h2 className='text-2xl text-black font-bold'>loading...</h2>
     
     )}
 
