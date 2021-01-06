@@ -7,7 +7,6 @@
 
 - add reset button (with alert to confirm)
 - add button to play again or go back to main menu when quiz ends
-- make 'next' button dynamic so when reaching last question it says 'check quiz score' 
 - add dropdown / form to choose question types, difficulty, categories, length, etc (check from API all options)
 - Add more info from the API such as what category each question is, or difficulty (maybe?)
 - Once all this is done, do an awesome styling to all the application

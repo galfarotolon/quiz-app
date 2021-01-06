@@ -17,6 +17,7 @@ const Trivia = () => {
     const [score, setScore] = useState(0)
     const [gameEnded, setGameEnded] = useState(false)
     const [correctAnswer, setCorrectAnswer] = useState(false)
+  
 
   
 
@@ -76,6 +77,7 @@ function handleAnswer(answer){
         }
 
         setCorrectAnswer(true)
+       
     }
 
     }
@@ -86,9 +88,11 @@ function handleAnswer(answer){
      
         setCounter(counter + 1)
         setCorrectAnswer(false);
+     
     }
 
     const handleOutcome = () => {
+
         return counter + 1 >= questions.length ? setGameEnded(true) : handleNext()
     }
 
@@ -98,9 +102,12 @@ function handleAnswer(answer){
 
 
     return gameEnded ? (
-        <div>
+        <div className='flex justify-center items-center h-screen flex-col'>
 
             <p>Your Score was {score}</p>
+
+            <Link to='/'>Play Again</Link>
+            
         </div>
     ) : (
     
@@ -116,7 +123,7 @@ function handleAnswer(answer){
 
                 
     
-                    <h2 dangerouslySetInnerHTML={{__html:questions[counter].question }} />
+                    <h2 className='max-w-xl min-w-1/2' dangerouslySetInnerHTML={{__html:questions[counter].question }} />
                     <p>Question {counter + 1} out of {questions.length}</p>
                     <p>Score: {score}/{questions.length}</p>
  
@@ -148,16 +155,18 @@ function handleAnswer(answer){
                 </div>
                 
                 {
-                    correctAnswer && (
-                        <button onClick={handleOutcome}>Next</button>
-                    )
+                   correctAnswer ? <button className={`mt-4 p-3 font-semibold rounded-md focus:outline-none bg-purple-500 hover:bg-purple-400 text-white`} 
+                   onClick={handleOutcome}>{counter + 1 >= questions.length ? 'See Final Score' : 'Next'}</button> 
+
+                   : <button className={`mt-4 p-3 font-semibold rounded-md focus:outline-none bg-purple-300 text-white cursor-default`} >Next</button> 
+                   
                 }
                
              
             </div>
 
             
-            ) : <h2 className='text-2xl text-black font-bold'>loading...</h2>
+            ) : <h2 className='text-2xl text-black font-bold flex justify-center items-center h-screen '>loading...</h2>
     
     )}
 
