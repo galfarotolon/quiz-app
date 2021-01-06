@@ -63,11 +63,10 @@ const Trivia = () => {
 
 function handleAnswer(answer){
 
-    console.log('rerender')
 
     if(!correctAnswer){
         if(answer === questions[counter].correct_answer){
-            setCorrectAnswer(true)
+           
             setScore(score + 1)
            
         } else{
@@ -76,25 +75,21 @@ function handleAnswer(answer){
             
         }
 
+        setCorrectAnswer(true)
     }
-    
-
-       
-    if(counter + 1 === questions.length  ){
-        setGameEnded(true)
-    }
-
-    // setCorrectAnswer(true)
 
     }
   
-    //if the answer clicked is the correct answer, highlight it as green 
-    //if its not, highlight the correct one as green
+
 
     const handleNext = () => {
-        setCorrectAnswer(false);
-
+     
         setCounter(counter + 1)
+        setCorrectAnswer(false);
+    }
+
+    const handleOutcome = () => {
+        return counter + 1 >= questions.length ? setGameEnded(true) : handleNext()
     }
 
 
@@ -131,18 +126,16 @@ function handleAnswer(answer){
 
                         {shuffledAnswers.map((answer, idx) =>{
 
-                            // console.log(obj, 'obj ans');
-
 
                                 const correct = correctAnswer ? 
                                 answer === questions[counter].correct_answer ? 
-                                `bg-green-500` : 'bg-red-500' : 'bg-blue-500'
+                                `bg-green-500 ` : 'bg-red-500 ' : 'bg-blue-500 hover:bg-blue-400'
     
                                 const textColor = correctAnswer ?
-                                'text-purple-800' : 'text-white' 
+                                'text-white' : 'text-white' 
 
                                        return <button 
-                            className= {`${correct} ${textColor} p-5 m-5 font-semibold rounded-md focus:outline-none hover:bg-blue-400`}
+                            className= {`${correct} ${textColor} p-3  font-semibold rounded-md focus:outline-none`}
                             onClick={()=>handleAnswer(answer)} 
                             key={idx} 
                             dangerouslySetInnerHTML={{__html: answer}} />
@@ -156,7 +149,7 @@ function handleAnswer(answer){
                 
                 {
                     correctAnswer && (
-                        <button onClick={handleNext}>Next</button>
+                        <button onClick={handleOutcome}>Next</button>
                     )
                 }
                
