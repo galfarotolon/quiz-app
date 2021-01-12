@@ -12,6 +12,7 @@ const Trivia = () => {
     const apiUrl = 'https://opentdb.com/api.php?amount=10'
 
 
+    // state slices
     const [questions, setQuestions] = useState([])
     const [counter, setCounter] = useState(0)
     const [score, setScore] = useState(0)
