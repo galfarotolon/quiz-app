@@ -47,8 +47,6 @@ const Trivia = () => {
 
 
     const shuffledAnswers = []
-
-    // const newArr = []
     
    if(questions.length && counter + 1 <= questions.length){
 
