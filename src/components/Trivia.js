@@ -50,7 +50,7 @@ const Trivia = () => {
     
    if(questions.length && counter + 1 <= questions.length){
 
-    //     // get all answers in the same array
+    // get all answers in same array, including wrong answer
     shuffledAnswers.push(...questions[counter].answers)
       
       
